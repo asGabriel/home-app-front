@@ -31,6 +31,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signIn({ email, password }: SignInData) {
     const { token, user } = await signInRequest({ email, password });
+    console.log("token", token)
 
     setCookie(undefined, "backoffice-token", token, {
       maxAge: 60 * 60 * 1, // 1 hour

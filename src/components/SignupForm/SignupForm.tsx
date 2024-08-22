@@ -1,23 +1,40 @@
-'use client'
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
+import { AuthContext } from "@/contexts/AuthContext";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type FieldType = {
-  username?: string;
-  password?: string;
+  username: string;
+  password: string;
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log("Success:", values);
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
+type FormData = {
+  email: string;
+  password: string;
 };
 
 export function SignupForm() {
+  const { register, handleSubmit } = useForm<FormData>();
+  const { signIn } = useContext(AuthContext);
+  
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    const { username, password } = values;
+    console.log("Success:", values);
+    await signIn({ email: username, password });
+  };
+  
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log(data);
+    await signIn(data);
+  };
+
   return (
     <Form
       name="basic"

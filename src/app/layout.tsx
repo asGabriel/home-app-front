@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
+"use client"
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Home Backoffice",
-  description: "This is an personal backoffice project",
-};
 
 export default function RootLayout({
   children,
@@ -16,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body >{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
