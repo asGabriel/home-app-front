@@ -1,10 +1,12 @@
 import "./App.css";
+import AppRouter from "./routes/routes";
 
 function App() {
   return (
-    <div>
-      <h1>My Application</h1>
-    </div>
+    <>
+    <div><h1>my app</h1></div>
+      <AppRouter/>
+    </>
   );
 }
 
