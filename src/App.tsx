@@ -1,12 +1,12 @@
 import "./App.css";
+import AppLayout from "./components/AppLayout/AppLayout";
 import AppRouter from "./routes/routes";
 
 function App() {
   return (
-    <>
-    <div><h1>my app</h1></div>
-      <AppRouter/>
-    </>
+    <AppLayout>
+      <AppRouter />
+    </AppLayout>
   );
 }
 
