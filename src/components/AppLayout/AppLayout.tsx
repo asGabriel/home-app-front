@@ -7,7 +7,7 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
-import './styles.css';
+import "./styles.css";
 
 const { Header, Sider, Content } = Layout;
 
@@ -17,9 +17,12 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  console.log("token bg", colorBgContainer)
 
   return (
     <Layout className="app-layout">
@@ -64,9 +67,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         <Content
           className="app-content"
           style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
