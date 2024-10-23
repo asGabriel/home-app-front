@@ -1,19 +1,29 @@
 import React, { useState } from "react";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+  DesktopOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import {
+  Layout,
+  Menu,
+  MenuProps,
+  theme,
+} from "antd";
 import "./styles.css";
+import { Footer } from "antd/es/layout/layout";
 
 const { Header, Sider, Content } = Layout;
 
 interface AppLayoutProps {
   children?: React.ReactNode;
 }
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+const items: MenuItem[] = [
+  { key: "1", icon: <PieChartOutlined />, label: <a href="/">Dashboard</a> },
+  { key: "2", icon: <DesktopOutlined />, label: <a href="/finance">Finanças</a> },
+];
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,57 +32,40 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  console.log("token bg", colorBgContainer)
-
   return (
-    <Layout className="app-layout">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+    <Layout>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        style={{height: '100vh'}}
+      >
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
-          mode="inline"
           defaultSelectedKeys={["1"]}
-          items={[
-            {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "nav 1",
-            },
-            {
-              key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "nav 2",
-            },
-            {
-              key: "3",
-              icon: <UploadOutlined />,
-              label: "nav 3",
-            },
-          ]}
+          mode="inline"
+          items={items}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+        <Header style={{ padding: 0, background: colorBgContainer, marginBottom: '10px'}} />
+        <Content style={{ margin: "0 16px"}}>
+          <div
             style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+              height: '100%'
             }}
-          />
-        </Header>
-        <Content
-          className="app-content"
-          style={{
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          {children}
+          >
+            {children}
+          </div>
         </Content>
+        <Footer style={{ textAlign: "center" }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
       </Layout>
     </Layout>
   );
