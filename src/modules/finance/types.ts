@@ -5,5 +5,5 @@ export interface Invoice {
   year: number;
   createdAt: string;
   updateAt?: string;
-  deletedAt?: string
+  deletedAt?: string;
 }
