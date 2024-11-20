@@ -29,7 +29,7 @@ const columns = [
   {
     title: 'Ação',
     key: 'action',
-    render: () => {return <><a><EditOutlined /></a></>}
+    render: () => { return <><a><EditOutlined /></a></> }
   },
 ];
 
@@ -51,11 +51,9 @@ const FinancePage = () => {
     loadInvoices();
   }, []);
 
-  console.log(invoices)
-  
   return (
     <>
-      <AppTable dataSource={invoices} columns={columns}/>
+      <AppTable dataSource={invoices} columns={columns} />
 
     </>
   );

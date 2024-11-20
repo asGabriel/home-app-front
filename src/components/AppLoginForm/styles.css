@@ -1,0 +1,19 @@
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+}
+
+.form-button-container {
+    background-color: yellow;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+.form-input {
+    min-width: 300px;
+}

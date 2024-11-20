@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FinancePage from "../pages/finance";
+import LoginPage from "../pages/login";
 
 const router = createBrowserRouter([
   {
@@ -9,6 +10,10 @@ const router = createBrowserRouter([
   {
     path: "/finance",
     element: <FinancePage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);
 

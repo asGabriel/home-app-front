@@ -6,3 +6,16 @@ body,
   margin: 0;
   padding: 0;
 }
+
+html {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
