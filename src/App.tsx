@@ -1,15 +1,14 @@
 import "./App.css";
-import { AppColorTokenProvider } from "./components/AppColorTokenProvider/AppColorTokenProvider";
-// import AppLayout from "./components/AppLayout/AppLayout";
 import AppRouter from "./routes/routes";
 
 function App() {
   return (
-      <AppColorTokenProvider>
-        {/* <AppLayout> */}
-        <AppRouter />
-        {/* </AppLayout> */}
-      </AppColorTokenProvider>
+    <>
+      <h1 className="text-3xl font-bold underline">
+        Tailwind está funcionando!
+      </h1>
+      <AppRouter />
+    </>
   );
 }
 
