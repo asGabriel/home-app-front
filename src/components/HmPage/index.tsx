@@ -27,31 +27,21 @@ type HmPageProps = {
 export const HmPage: React.FC<HmPageProps> = ({ children }) => {
     return (
         <Layout hasSider className='page'>
-            <Sider>
+            <Sider className='sider'>
                 <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, background: 'yellow' }} />
-                <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+                <Content style={{ margin: '24px 16px 0', overflow: 'initial', height: '100%' }}>
                     <div
                         style={{
                             padding: 24,
                             textAlign: 'center',
                             background: 'blue',
-                            // borderRadius: borderRadiusLG,
+                            borderRadius: '5px',
                         }}
                     >
-                        <p>long content</p>
                         {children}
-                        {
-                            // indicates very long content
-                            Array.from({ length: 100 }, (_, index) => (
-                                <React.Fragment key={index}>
-                                    {index % 20 === 0 && index ? 'more' : '...'}
-                                    <br />
-                                </React.Fragment>
-                            ))
-                        }
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>

@@ -1,3 +1,15 @@
 .page {
     height: 100%;
+
+    .sider {
+        overflow: auto;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        bottom: 0;
+        scrollbar-width: thin;
+        // scrollbar-gutter: s
+        inset-inline-start: 0;
+        border-radius: 5px;
+    }
 }
