@@ -66,6 +66,7 @@ export const HmPage: React.FC<HmPageProps> = ({ children }) => {
             minHeight: 280,
             padding: 24,
             borderRadius: borderRadiusLG,
+            height: '100%'
           }}
         >
           {children}
