@@ -1,24 +1,20 @@
 import './styles.scss'
-import { BarChartOutlined, FileDoneOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import { HomeFilled, FundFilled } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, MenuProps, theme } from "antd"
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import React from "react";
+import { useNavigate } from 'react-router';
 
 const items: MenuProps['items'] = [
   {
     key: '1',
-    icon: <FileDoneOutlined />,
-    label: 'Finanças',
+    icon: <HomeFilled />,
+    label: 'Home',
   },
   {
     key: '2',
-    icon: <VideoCameraOutlined />,
-    label: 'Câmera',
-  },
-  {
-    key: '3',
-    icon: <BarChartOutlined />,
-    label: 'Relatórios',
+    icon: <FundFilled />,
+    label: 'Finanças',
   },
 ];
 
@@ -27,9 +23,23 @@ type HmPageProps = {
 }
 
 export const HmPage: React.FC<HmPageProps> = ({ children }) => {
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const handleMenuClick: MenuProps['onClick'] = (e) => {
+    switch (e.key) {
+      case '1':
+        navigate('/');
+        break;
+      case '2':
+        navigate('/invoices');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <Layout className='page'>
@@ -40,7 +50,8 @@ export const HmPage: React.FC<HmPageProps> = ({ children }) => {
           mode="horizontal"
           defaultSelectedKeys={['2']}
           items={items}
-          className='header menu'
+          className='menu'
+          onClick={handleMenuClick}
         />
       </Header>
       <Content className='content'>
@@ -55,6 +66,7 @@ export const HmPage: React.FC<HmPageProps> = ({ children }) => {
             minHeight: 280,
             padding: 24,
             borderRadius: borderRadiusLG,
+            height: '100%'
           }}
         >
           {children}
