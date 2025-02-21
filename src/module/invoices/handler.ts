@@ -1,11 +1,13 @@
 import { HttpHandler } from "../../core/HttpHandler";
 
 export class InvoicesService extends HttpHandler {
+  private readonly invoicesEndpoint = "/finance/invoices"
+
   constructor() {
-    super("http://localhost:8080/finance");
+    super("https://finance-api.ngrok.app");
   }
 
   public listEntries = async () => {
-    return await this.get("/entries");
+    return await this.get(this.invoicesEndpoint);
   };
 }

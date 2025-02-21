@@ -3,16 +3,14 @@ import { InvoicesService } from "../../../module/invoices/handler"
 export class InvoicesController {
     private invoicesService: InvoicesService
 
-    constructor(
-
-    ) {
+    constructor() {
         this.invoicesService = new InvoicesService();
     }
 
     public test = async () => {
-        await this.invoicesService.listEntries();
+        return await this.invoicesService.listEntries();
     }
-    
+
 }
 
 export const useController = () => {
