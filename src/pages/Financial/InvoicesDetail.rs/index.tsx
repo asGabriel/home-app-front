@@ -1,35 +1,25 @@
-import './styles.scss'
 import { ColumnsType } from "antd/es/table";
-import { HmTable } from "../../../../components/HmTable/HmTable";
-import { Invoice } from "../../../../module/financial/invoices/types";
+import { HmPage } from "../../../components/HmPage"
+import { Entry } from "../../../module/financial/entries/types";
 import { Button, Space } from "antd";
-import { DeleteFilled, EditFilled, SearchOutlined } from "@ant-design/icons";
+import { EditFilled, DeleteFilled } from "@ant-design/icons";
+import { HmTable } from "../../../components/HmTable/HmTable";
+import { useFinancialController } from "../controller";
 
-export interface InvoicesTableProps {
-    dataSource: Invoice[],
-    onEdit: (invoiceId: string) => void;
-    onDelete: (invoiceId: string) => void;
-}
+export const InvoicesDetailsPage = () => {
+    const controller = useFinancialController();
 
-export const InvoicesTable = ({ dataSource, onEdit, onDelete }: InvoicesTableProps) => {
-
-    const columns: ColumnsType<Invoice> = [
+    const columns: ColumnsType<Entry> = [
         {
             title: 'Ação',
             key: 'action',
             width: 100,
             render: (_, record) => (
                 <Space>
-                    <Button type="link" onClick={() => {
-                        window.location.href = `/invoices/${record.invoiceId}`
-                    }}>
-                        <SearchOutlined className='icon' />
-                    </Button>
-
-                    <Button type="link" onClick={() => onEdit(record.invoiceId)}>
+                    <Button type="link" onClick={() => controller.editEntryById(record.entryId)}>
                         <EditFilled className='icon' />
                     </Button>
-                    <Button type="link" danger onClick={() => onDelete(record.invoiceId)}>
+                    <Button type="link" danger onClick={() => controller.deleteEntryById(record.entryId)}>
                         <DeleteFilled className='icon' />
                     </Button>
                 </Space>
@@ -63,6 +53,9 @@ export const InvoicesTable = ({ dataSource, onEdit, onDelete }: InvoicesTablePro
     ];
 
     return (
-        <HmTable columns={columns} dataSource={dataSource} />
+        <HmPage>
+            <h1>invoices details</h1>
+            <HmTable columns={columns} dataSource={[]} />
+        </HmPage>
     )
 }

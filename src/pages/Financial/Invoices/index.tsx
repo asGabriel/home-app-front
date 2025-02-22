@@ -18,7 +18,7 @@ export const InvoicesPage = () => {
         };
 
         fetchData();
-    }, [controller]);
+    }, [invoicesData]);
 
     const handleButtonClick = async () => {
     }

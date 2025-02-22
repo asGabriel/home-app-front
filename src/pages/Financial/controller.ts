@@ -19,6 +19,14 @@ export class FinancialController {
     public deleteInvoiceById = async (invoiceId: string): Promise<void> => {
         console.log(`TODO: editar invoice ${invoiceId}`)
     }
+
+    public editEntryById = async (entryId:string): Promise<void> => {
+        console.log(`TODO: editar entry ${entryId}`)
+    }
+
+    public deleteEntryById = async (entryId: string): Promise<void> => {
+        console.log(`TODO: editar entry ${entryId}`)
+    }
 }
 
 export const useFinancialController = () => {
