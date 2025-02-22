@@ -5,9 +5,25 @@ import { Button, Space } from "antd";
 import { EditFilled, DeleteFilled } from "@ant-design/icons";
 import { HmTable } from "../../../components/HmTable/HmTable";
 import { useFinancialController } from "../controller";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 
 export const InvoicesDetailsPage = () => {
     const controller = useFinancialController();
+    const { id } = useParams();
+
+    const [entries, setEntries] = useState<Entry[]>([]);
+
+    useEffect(() => {
+        const fetchData = async (invoiceId: string) => {
+            const entries = await controller.fetchEntriesByInvoiceId(invoiceId);
+            setEntries(entries);
+        };
+
+        if (id) {
+            fetchData(id);
+        }
+    }, [id]);
 
     const columns: ColumnsType<Entry> = [
         {
@@ -27,35 +43,47 @@ export const InvoicesDetailsPage = () => {
         },
         {
             title: 'ID',
+            dataIndex: 'entryId',
+            key: 'invoiceId',
+            hidden: true
+        },
+        {
+            title: 'Invoice ID',
             dataIndex: 'invoiceId',
             key: 'invoiceId',
+            hidden: true
+        },
+        {
+            title: 'Tipo de movimento',
+            dataIndex: 'entryType',
+            key: 'entryType',
         },
         {
             title: 'Descrição',
-            dataIndex: 'title',
-            key: 'title',
+            dataIndex: 'description',
+            key: 'description',
         },
         {
-            title: 'Mês referência',
-            dataIndex: 'month',
-            key: 'month',
+            title: 'Valor (R$)',
+            dataIndex: 'value',
+            key: 'value',
         },
         {
-            title: 'Ano referência',
-            dataIndex: 'year',
-            key: 'year',
+            title: 'Vencimento',
+            dataIndex: 'dueDate',
+            key: 'dueDate',
         },
         {
-            title: 'Criada em',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
         },
     ];
 
     return (
         <HmPage>
             <h1>invoices details</h1>
-            <HmTable columns={columns} dataSource={[]} />
+            <HmTable columns={columns} dataSource={entries} />
         </HmPage>
     )
 }

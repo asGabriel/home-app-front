@@ -18,9 +18,10 @@ export const InvoicesPage = () => {
         };
 
         fetchData();
-    }, [invoicesData]);
+    }, []);
 
     const handleButtonClick = async () => {
+        console.log("TODO: cadastrar entrada")
     }
 
     return (
