@@ -55,11 +55,11 @@ export const HmPage: React.FC<HmPageProps> = ({ children }) => {
         />
       </Header>
       <Content className='content'>
-        <Breadcrumb style={{ margin: '16px 0' }}>
+        {/* <Breadcrumb style={{ margin: '16px 0' }}>
           <Breadcrumb.Item>Home</Breadcrumb.Item>
           <Breadcrumb.Item>Finanças</Breadcrumb.Item>
           <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb> */}
         <div
           style={{
             background: colorBgContainer,

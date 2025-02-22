@@ -1,47 +1,68 @@
+import './styles.scss'
 import { ColumnsType } from "antd/es/table";
-import { Entry } from "../../../../module/invoices/types";
 import { HmTable } from "../../../../components/HmTable/HmTable";
+import { Invoice } from "../../../../module/financial/invoices/types";
+import { Button, Space } from "antd";
+import { DeleteFilled, EditFilled, SearchOutlined } from "@ant-design/icons";
 
-const columns: ColumnsType<Entry> = [
-    {
-        title: 'ID',
-        dataIndex: 'entryId',
-        key: 'entryId',
-    },
-    {
-        title: 'ID Fatura',
-        dataIndex: 'invoiceId',
-        key: 'invoiceId',
-    },
-    {
-        title: 'Natureza',
-        dataIndex: 'entryType',
-        key: 'entryType',
-    },
-    {
-        title: 'Descrição',
-        dataIndex: 'description',
-        key: 'description',
-    },
-    {
-        title: 'Valor (R$)',
-        dataIndex: 'value',
-        key: 'value',
-    },
-    {
-        title: 'Vencimento',
-        dataIndex: 'dueDate',
-        key: 'dueDate',
-    },
-    {
-        title: 'Status',
-        dataIndex: 'entryType',
-        key: 'entryType',
-    },
-];
+export interface InvoicesTableProps {
+    dataSource: Invoice[],
+    onEdit: (invoiceId: string) => void;
+    onDelete: (invoiceId: string) => void;
+}
 
-export const InvoicesTable = () => {
-    return(
-        <HmTable columns={columns} />
+export const InvoicesTable = ({ dataSource, onEdit, onDelete }: InvoicesTableProps) => {
+
+    const columns: ColumnsType<Invoice> = [
+        {
+            title: 'Ação',
+            key: 'action',
+            width: 100,
+            render: (_, record) => (
+                <Space>
+                    <Button type="link" onClick={() => {
+                        window.location.href = `/invoices/${record.invoiceId}`
+                    }}>
+                        <SearchOutlined className='icon' />
+                    </Button>
+
+                    <Button type="link" onClick={() => onEdit(record.invoiceId)}>
+                        <EditFilled className='icon' />
+                    </Button>
+                    <Button type="link" danger onClick={() => onDelete(record.invoiceId)}>
+                        <DeleteFilled className='icon' />
+                    </Button>
+                </Space>
+            ),
+        },
+        {
+            title: 'ID',
+            dataIndex: 'invoiceId',
+            key: 'invoiceId',
+        },
+        {
+            title: 'Descrição',
+            dataIndex: 'title',
+            key: 'title',
+        },
+        {
+            title: 'Mês referência',
+            dataIndex: 'month',
+            key: 'month',
+        },
+        {
+            title: 'Ano referência',
+            dataIndex: 'year',
+            key: 'year',
+        },
+        {
+            title: 'Criada em',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+        },
+    ];
+
+    return (
+        <HmTable columns={columns} dataSource={dataSource} />
     )
 }
