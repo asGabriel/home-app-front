@@ -1,47 +1,41 @@
 import { ColumnsType } from "antd/es/table";
-import { Entry } from "../../../../module/invoices/types";
 import { HmTable } from "../../../../components/HmTable/HmTable";
+import { Invoice } from "../../../../module/financial/invoices/types";
 
-const columns: ColumnsType<Entry> = [
+const columns: ColumnsType<Invoice> = [
     {
         title: 'ID',
-        dataIndex: 'entryId',
-        key: 'entryId',
-    },
-    {
-        title: 'ID Fatura',
         dataIndex: 'invoiceId',
         key: 'invoiceId',
     },
     {
-        title: 'Natureza',
-        dataIndex: 'entryType',
-        key: 'entryType',
-    },
-    {
         title: 'Descrição',
-        dataIndex: 'description',
-        key: 'description',
+        dataIndex: 'title',
+        key: 'title',
     },
     {
-        title: 'Valor (R$)',
-        dataIndex: 'value',
-        key: 'value',
+        title: 'Mês referência',
+        dataIndex: 'month',
+        key: 'month',
     },
     {
-        title: 'Vencimento',
-        dataIndex: 'dueDate',
-        key: 'dueDate',
+        title: 'Ano referência',
+        dataIndex: 'year',
+        key: 'year',
     },
     {
-        title: 'Status',
-        dataIndex: 'entryType',
-        key: 'entryType',
+        title: 'Criada em',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
     },
 ];
 
-export const InvoicesTable = () => {
-    return(
-        <HmTable columns={columns} />
+export interface InvoicesTableProps {
+    dataSource: Invoice[]
+}
+
+export const InvoicesTable = ({ dataSource }: InvoicesTableProps) => {
+    return (
+        <HmTable columns={columns} dataSource={dataSource} />
     )
 }
