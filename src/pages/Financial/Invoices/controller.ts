@@ -8,6 +8,7 @@ export class InvoicesController {
     }
 
     public test = async () => {
+        // implementar requisição na API
         return await this.invoicesService.listEntries();
     }
 
