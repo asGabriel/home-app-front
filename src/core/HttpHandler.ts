@@ -32,6 +32,7 @@ export class HttpHandler {
       }
       return await response.json();
     } catch (error) {
+      // TODO: implementar error
       console.error("Request error:", error);
       throw error;
     }
