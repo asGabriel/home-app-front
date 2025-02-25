@@ -16,6 +16,7 @@ export class HttpHandler {
       method,
       headers: {
         "Content-Type": "application/json",
+        'Access-Control-Allow-Origin': "*",
         ...headers,
       },
       body: data,
