@@ -42,6 +42,10 @@ export class HttpHandler {
   public get<T>(endpoint: string, headers?: HeadersInit): Promise<T> {
     return this.request<T>(endpoint, HttpMethod.GET, undefined, headers);
   }
+
+  public post<TResponse, TPayload>(endpoint: string, headers?: HeadersInit, body?: TPayload): Promise<TResponse> {
+    return this.request<TResponse>(endpoint, HttpMethod.POST, body, headers);
+  }
 }
 
 enum HttpMethod {
