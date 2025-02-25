@@ -4,9 +4,19 @@ export interface Entry {
     entryType: EntryType,
     description: string,
     value: number,
-    dueDate: Date,
+    dueDate: string,
     accountId: string,
     status: EntryStatus
+}
+
+export interface CreateEntryPayload {
+    invoiceId: string,
+    accountId: string,
+    entryType: EntryType
+    description: string,
+    value: number,
+    dueDate: string,
+    tag: string[]
 }
 
 export enum EntryType {

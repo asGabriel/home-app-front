@@ -1,14 +1,16 @@
 import { Button, Form, Input, InputNumber, Modal, Radio, Select } from "antd";
 import { useState } from "react";
 import { RegisterEntryFieldType } from "../types";
+import { CreateEntryPayload } from "../../../../module/financial/entries/types";
 
-export interface ModalProps {
+export interface ModalProps<T> {
     isOpen: boolean;
     onClose: () => void;
-    onOk: () => void;
+    onOk: (payload: T) => void;
 }
 
-export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
+// TODO: Componentizar esse modal para receber só o form como {children}
+export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps<CreateEntryPayload>) => {
     const [form] = Form.useForm();
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
@@ -41,12 +43,13 @@ export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 600 }}
                 initialValues={{ remember: true }}
-                onFinish={(values) => {
-                    console.log("TODO: enviar a req de cadastro", values)
+                onFinish={(values: RegisterEntryFieldType) => {
+                    const payload: CreateEntryPayload = { accountId: values.accountId, description: values.description, entryType: values.type, value: values.value, invoiceId: "e1e6192d-052d-4c7b-b766-452905644527", dueDate: '2025-01-01', tag: [] }
                     handleCloseConfirmModal();
+
                     // um pequeno delay para garantir o fechamento antes de alterar o estado do contexto
-                    setTimeout(() => {
-                        onOk();
+                    setTimeout(async () => {
+                        await onOk(payload);
                     }, 0);
                 }}
                 onFinishFailed={() => console.log("Falha ao enviar")}
