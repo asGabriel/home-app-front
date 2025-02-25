@@ -74,10 +74,10 @@ export const InvoicesDetailsPage = () => {
                         onClick={() => setIsModalOpen(true)}
                     />
                 </Col>
-                
+
             </Row>
             <ModalContext.Provider value={{ isModalOpen, closeModal, openModal }}>
-                <RegisterEntryForm isOpen={isModalOpen} onClose={closeModal} onOk={openModal}/>
+                <RegisterEntryForm isOpen={isModalOpen} onClose={closeModal} onOk={controller.createEntry} />
             </ModalContext.Provider>
             <Divider variant="dashed" style={{ borderColor: '#000000' }} dashed>
                 <h3>Entradas</h3>
