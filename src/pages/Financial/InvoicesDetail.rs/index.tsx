@@ -1,18 +1,24 @@
 import { ColumnsType } from "antd/es/table";
 import { HmPage } from "../../../components/HmPage"
 import { Entry } from "../../../module/financial/entries/types";
-import { Button, Space } from "antd";
-import { EditFilled, DeleteFilled } from "@ant-design/icons";
+import { Button, Col, Divider, Row, Space } from "antd";
+import { EditFilled, DeleteFilled, PlusCircleOutlined } from "@ant-design/icons";
 import { HmTable } from "../../../components/HmTable/HmTable";
 import { useFinancialController } from "../controller";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { tableColumns } from "./types";
+import { RegisterEntryForm } from "./RegisterEntryForm/RegisterEntryForm";
+import { ModalContext } from "../../../contexts/ModalContext";
 
 export const InvoicesDetailsPage = () => {
     const controller = useFinancialController();
     const { id } = useParams();
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [entries, setEntries] = useState<Entry[]>([]);
+
 
     useEffect(() => {
         const fetchData = async (invoiceId: string) => {
@@ -41,48 +47,41 @@ export const InvoicesDetailsPage = () => {
                 </Space>
             ),
         },
-        {
-            title: 'ID',
-            dataIndex: 'entryId',
-            key: 'invoiceId',
-            hidden: true
-        },
-        {
-            title: 'Invoice ID',
-            dataIndex: 'invoiceId',
-            key: 'invoiceId',
-            hidden: true
-        },
-        {
-            title: 'Tipo de movimento',
-            dataIndex: 'entryType',
-            key: 'entryType',
-        },
-        {
-            title: 'Descrição',
-            dataIndex: 'description',
-            key: 'description',
-        },
-        {
-            title: 'Valor (R$)',
-            dataIndex: 'value',
-            key: 'value',
-        },
-        {
-            title: 'Vencimento',
-            dataIndex: 'dueDate',
-            key: 'dueDate',
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-        },
+        ...tableColumns
     ];
 
+    const openModal = () => {
+        setIsModalOpen(false)
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false)
+    }
+
+    // TODO: adicionar o cabeçalho da fatura
     return (
         <HmPage>
-            <h1>invoices details</h1>
+            <Row justify={'space-between'} align={'middle'}>
+                <Col>
+                    <h1>invoices details</h1>
+                </Col>
+                <Col>
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<PlusCircleOutlined />}
+                        size={'large'}
+                        onClick={() => setIsModalOpen(true)}
+                    />
+                </Col>
+                
+            </Row>
+            <ModalContext.Provider value={{ isModalOpen, closeModal, openModal }}>
+                <RegisterEntryForm isOpen={isModalOpen} onClose={closeModal} onOk={openModal}/>
+            </ModalContext.Provider>
+            <Divider variant="dashed" style={{ borderColor: '#000000' }} dashed>
+                <h3>Entradas</h3>
+            </Divider>
             <HmTable columns={columns} dataSource={entries} />
         </HmPage>
     )
