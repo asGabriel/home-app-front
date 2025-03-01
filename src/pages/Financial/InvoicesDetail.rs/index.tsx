@@ -6,19 +6,16 @@ import { EditFilled, DeleteFilled, PlusCircleOutlined } from "@ant-design/icons"
 import { HmTable } from "../../../components/HmTable/HmTable";
 import { useFinancialController } from "../controller";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { tableColumns } from "./types";
 import { RegisterEntryForm } from "./RegisterEntryForm/RegisterEntryForm";
-import { ModalContext } from "../../../contexts/ModalContext";
 
 export const InvoicesDetailsPage = () => {
     const controller = useFinancialController();
     const { id } = useParams();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [entries, setEntries] = useState<Entry[]>([]);
-
+    const location = useLocation();
 
     useEffect(() => {
         const fetchData = async (invoiceId: string) => {
@@ -29,7 +26,7 @@ export const InvoicesDetailsPage = () => {
         if (id) {
             fetchData(id);
         }
-    }, [id]);
+    }, [id, location.state]);
 
     const columns: ColumnsType<Entry> = [
         {
@@ -50,14 +47,6 @@ export const InvoicesDetailsPage = () => {
         ...tableColumns
     ];
 
-    const openModal = () => {
-        setIsModalOpen(false)
-    }
-
-    const closeModal = () => {
-        setIsModalOpen(false)
-    }
-
     // TODO: adicionar o cabeçalho da fatura
     return (
         <HmPage>
@@ -76,9 +65,7 @@ export const InvoicesDetailsPage = () => {
                 </Col>
 
             </Row>
-            <ModalContext.Provider value={{ isModalOpen, closeModal, openModal }}>
-                <RegisterEntryForm isOpen={isModalOpen} onClose={closeModal} onOk={controller.createEntry} />
-            </ModalContext.Provider>
+            <RegisterEntryForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onOk={controller.createEntry} />
             <Divider variant="dashed" style={{ borderColor: '#000000' }} dashed>
                 <h3>Entradas</h3>
             </Divider>

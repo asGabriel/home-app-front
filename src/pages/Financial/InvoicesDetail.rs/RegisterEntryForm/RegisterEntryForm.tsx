@@ -1,58 +1,61 @@
 import { Button, Form, Input, InputNumber, Modal, Radio, Select } from "antd";
 import { useState } from "react";
 import { RegisterEntryFieldType } from "../types";
-import { CreateEntryPayload } from "../../../../module/financial/entries/types";
+import { CreateEntryPayload, Entry } from "../../../../module/financial/entries/types";
+import { useNavigate } from "react-router";
 
-export interface ModalProps<T> {
+export interface ModalProps<T, TRes> {
     isOpen: boolean;
     onClose: () => void;
-    onOk: (payload: T) => void;
+    onOk: (payload: T) => Promise<TRes>;
 }
 
-// TODO: Componentizar esse modal para receber só o form como {children}
-export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps<CreateEntryPayload>) => {
+export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps<CreateEntryPayload, Entry>) => {
     const [form] = Form.useForm();
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
+    const navigate = useNavigate();
 
-    const handleCloseConfirmModal = () => {
-        setConfirmModal(false);
-    };
+    const handleCloseConfirmModal = () => setConfirmModal(false);
+    const handleOpenConfirmModal = () => setConfirmModal(true);
 
-    const handleOpenConfirmModal = () => {
-        setConfirmModal(true);
-    };
+    const handleConfirm = async () => {
+        try {
+            await form.validateFields();
+            const values = form.getFieldsValue();
+            const payload: CreateEntryPayload = {
+                accountId: values.accountId,
+                description: values.description,
+                entryType: values.type,
+                value: values.value,
+                invoiceId: "e1e6192d-052d-4c7b-b766-452905644527",
+                dueDate: "2025-01-01",
+                tag: [],
+            };
 
-    const handleConfirm = () => {
-        form.submit();
+            setConfirmModal(false);
+
+            await onOk(payload);
+            form.resetFields();
+            onClose();
+
+            navigate("/invoices/e1e6192d-052d-4c7b-b766-452905644527", { state: { refresh: true } });
+         } catch (error) {
+            console.error("Erro ao confirmar:", error);
+        }
     };
 
     return (
         <Modal
             title="Registrar nova entrada"
             open={isOpen}
-            onCancel={() => {
-                onClose();
-                form.resetFields();
-            }}
             footer={null}
         >
             <Form
                 form={form}
-                name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
-                onFinish={(values: RegisterEntryFieldType) => {
-                    const payload: CreateEntryPayload = { accountId: values.accountId, description: values.description, entryType: values.type, value: values.value, invoiceId: "e1e6192d-052d-4c7b-b766-452905644527", dueDate: '2025-01-01', tag: [] }
-                    handleCloseConfirmModal();
-
-                    // um pequeno delay para garantir o fechamento antes de alterar o estado do contexto
-                    setTimeout(async () => {
-                        await onOk(payload);
-                    }, 0);
-                }}
-                onFinishFailed={() => console.log("Falha ao enviar")}
+                onFinish={() => handleOpenConfirmModal()}
                 autoComplete="off"
             >
                 <Form.Item<RegisterEntryFieldType>
@@ -71,9 +74,7 @@ export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps<CreateEn
                     rules={[{ required: true, message: "*campo obrigatório" }]}
                 >
                     <Select>
-                        <Select.Option value="39c9765b-10d8-477d-b8aa-8219f953a6dc">
-                            NUBANK
-                        </Select.Option>
+                        <Select.Option value="39c9765b-10d8-477d-b8aa-8219f953a6dc">NUBANK</Select.Option>
                         <Select.Option value="INTER">INTER</Select.Option>
                     </Select>
                 </Form.Item>
