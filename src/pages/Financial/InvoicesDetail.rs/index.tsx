@@ -6,30 +6,39 @@ import { EditFilled, DeleteFilled, PlusCircleOutlined } from "@ant-design/icons"
 import { HmTable } from "../../../components/HmTable/HmTable";
 import { useFinancialController } from "../controller";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { tableColumns } from "./types";
 import { RegisterEntryForm } from "./RegisterEntryForm/RegisterEntryForm";
-import { ModalContext } from "../../../contexts/ModalContext";
+import { Account } from "../../../module/financial/accounts/types";
 
 export const InvoicesDetailsPage = () => {
     const controller = useFinancialController();
     const { id } = useParams();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const [entries, setEntries] = useState<Entry[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
+    const location = useLocation();
 
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            const accounts = await controller.fetchAccounts();
+            setAccounts(accounts)
+        }
+
+        fetchAccounts()
+    }, []);
 
     useEffect(() => {
         const fetchData = async (invoiceId: string) => {
-            const entries = await controller.fetchEntriesByInvoiceId(invoiceId);
-            setEntries(entries);
+            await controller.fetchEntriesByInvoiceId(invoiceId).then((e) => setEntries(e));
+
+            // setEntries(entries);
         };
 
         if (id) {
             fetchData(id);
         }
-    }, [id]);
+    }, [id, location.state]);
 
     const columns: ColumnsType<Entry> = [
         {
@@ -50,14 +59,6 @@ export const InvoicesDetailsPage = () => {
         ...tableColumns
     ];
 
-    const openModal = () => {
-        setIsModalOpen(false)
-    }
-
-    const closeModal = () => {
-        setIsModalOpen(false)
-    }
-
     // TODO: adicionar o cabeçalho da fatura
     return (
         <HmPage>
@@ -74,11 +75,11 @@ export const InvoicesDetailsPage = () => {
                         onClick={() => setIsModalOpen(true)}
                     />
                 </Col>
-                
+
             </Row>
-            <ModalContext.Provider value={{ isModalOpen, closeModal, openModal }}>
-                <RegisterEntryForm isOpen={isModalOpen} onClose={closeModal} onOk={openModal}/>
-            </ModalContext.Provider>
+            <RegisterEntryForm accounts={accounts} isOpen={isModalOpen} onClose={() =>
+                setIsModalOpen(false)
+            } onOk={controller.createEntry} />
             <Divider variant="dashed" style={{ borderColor: '#000000' }} dashed>
                 <h3>Entradas</h3>
             </Divider>

@@ -1,55 +1,67 @@
-import { Button, Form, Input, InputNumber, Modal, Radio, Select } from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Radio, Select } from "antd";
 import { useState } from "react";
 import { RegisterEntryFieldType } from "../types";
+import { CreateEntryPayload, Entry } from "../../../../module/financial/entries/types";
+import { useNavigate, useParams } from "react-router";
+import dayjs from 'dayjs';
+import { Account } from "../../../../module/financial/accounts/types";
 
-export interface ModalProps {
+export interface ModalProps<T, TRes> {
     isOpen: boolean;
     onClose: () => void;
-    onOk: () => void;
+    onOk: (payload: T) => Promise<TRes>;
+    accounts: Account[]
 }
 
-export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
+export const RegisterEntryForm = ({ isOpen, onClose, onOk, accounts }: ModalProps<CreateEntryPayload, Entry>) => {
     const [form] = Form.useForm();
     const [confirmModal, setConfirmModal] = useState<boolean>(false);
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-    const handleCloseConfirmModal = () => {
-        setConfirmModal(false);
-    };
+    const handleCloseConfirmModal = () => setConfirmModal(false);
+    const handleOpenConfirmModal = () => setConfirmModal(true);
 
-    const handleOpenConfirmModal = () => {
-        setConfirmModal(true);
-    };
+    const handleConfirm = async () => {
+        try {
+            await form.validateFields();
+            const values: RegisterEntryFieldType = form.getFieldsValue();
 
-    const handleConfirm = () => {
-        form.submit();
+            const payload: CreateEntryPayload = {
+                accountId: values.accountId,
+                description: values.description,
+                entryType: values.type,
+                value: values.value,
+                invoiceId: id ?? "",
+                dueDate: dayjs(values.dueDate).format("YYYY-MM-DD"),
+                tag: [],
+            };
+
+            setConfirmModal(false);
+
+            await onOk(payload);
+            form.resetFields();
+            onClose();
+
+            navigate(`/invoices/${id}`, { state: { refresh: true } });
+        } catch (error) {
+            console.error("Erro ao confirmar:", error);
+        }
     };
 
     return (
         <Modal
             title="Registrar nova entrada"
             open={isOpen}
-            onCancel={() => {
-                onClose();
-                form.resetFields();
-            }}
+            onCancel={onClose}
             footer={null}
         >
             <Form
                 form={form}
-                name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 600 }}
-                initialValues={{ remember: true }}
-                onFinish={(values) => {
-                    console.log("TODO: enviar a req de cadastro", values)
-                    handleCloseConfirmModal();
-                    // um pequeno delay para garantir o fechamento antes de alterar o estado do contexto
-                    setTimeout(() => {
-                        onOk();
-                    }, 0);
-                }}
-                onFinishFailed={() => console.log("Falha ao enviar")}
+                onFinish={() => handleOpenConfirmModal()}
                 autoComplete="off"
             >
                 <Form.Item<RegisterEntryFieldType>
@@ -68,10 +80,9 @@ export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
                     rules={[{ required: true, message: "*campo obrigatório" }]}
                 >
                     <Select>
-                        <Select.Option value="39c9765b-10d8-477d-b8aa-8219f953a6dc">
-                            NUBANK
-                        </Select.Option>
-                        <Select.Option value="INTER">INTER</Select.Option>
+                        {accounts.map((acc) =>
+                            <Select.Option value={acc.accountId}>{`${acc.bankName} - ${acc.owner}`}</Select.Option>
+                        )}
                     </Select>
                 </Form.Item>
 
@@ -80,7 +91,7 @@ export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
                     name="value"
                     rules={[{ required: true, message: "*campo obrigatório" }]}
                 >
-                    <InputNumber min={0} />
+                    <InputNumber min={1} max={9999} defaultValue={0} />
                 </Form.Item>
 
                 <Form.Item<RegisterEntryFieldType>
@@ -88,7 +99,15 @@ export const RegisterEntryForm = ({ isOpen, onClose, onOk }: ModalProps) => {
                     name="description"
                     rules={[{ required: true, message: "*campo obrigatório" }]}
                 >
-                    <Input maxLength={30} />
+                    <Input />
+                </Form.Item>
+
+                <Form.Item<RegisterEntryFieldType>
+                    label="Vencimento"
+                    name="dueDate"
+                    rules={[{ required: true, message: "*campo obrigatório" }]}
+                >
+                    <DatePicker />
                 </Form.Item>
 
                 <Form.Item label={null}>

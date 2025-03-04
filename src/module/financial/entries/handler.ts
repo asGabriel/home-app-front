@@ -1,5 +1,5 @@
 import { HttpHandler } from "../../../core/HttpHandler";
-import { Entry } from "./types";
+import { CreateEntryPayload, Entry } from "./types";
 
 export class EntriesService extends HttpHandler {
   private readonly entriesEndpoint = "/finance/entries"
@@ -11,4 +11,8 @@ export class EntriesService extends HttpHandler {
   public fetchEntriesByInvoiceId = async (invoiceId: string): Promise<Entry[]> => {
     return await this.get<Entry[]>(`${this.entriesEndpoint}/invoice/${invoiceId}`);
   };
+
+  public createEntry = async (payload: CreateEntryPayload): Promise<Entry> => {
+    return await this.post<Entry, CreateEntryPayload>(`${this.entriesEndpoint}`, undefined, payload);
+  }
 }
