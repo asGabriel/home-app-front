@@ -9,18 +9,30 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router";
 import { tableColumns } from "./types";
 import { RegisterEntryForm } from "./RegisterEntryForm/RegisterEntryForm";
+import { Account } from "../../../module/financial/accounts/types";
 
 export const InvoicesDetailsPage = () => {
     const controller = useFinancialController();
     const { id } = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [entries, setEntries] = useState<Entry[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>([]);
     const location = useLocation();
 
     useEffect(() => {
+        const fetchAccounts = async () => {
+            const accounts = await controller.fetchAccounts();
+            setAccounts(accounts)
+        }
+
+        fetchAccounts()
+    }, []);
+
+    useEffect(() => {
         const fetchData = async (invoiceId: string) => {
-            const entries = await controller.fetchEntriesByInvoiceId(invoiceId);
-            setEntries(entries);
+            await controller.fetchEntriesByInvoiceId(invoiceId).then((e) => setEntries(e));
+
+            // setEntries(entries);
         };
 
         if (id) {
@@ -65,7 +77,9 @@ export const InvoicesDetailsPage = () => {
                 </Col>
 
             </Row>
-            <RegisterEntryForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onOk={controller.createEntry} />
+            <RegisterEntryForm accounts={accounts} isOpen={isModalOpen} onClose={() =>
+                setIsModalOpen(false)
+            } onOk={controller.createEntry} />
             <Divider variant="dashed" style={{ borderColor: '#000000' }} dashed>
                 <h3>Entradas</h3>
             </Divider>

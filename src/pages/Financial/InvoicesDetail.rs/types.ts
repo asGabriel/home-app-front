@@ -6,6 +6,7 @@ export type RegisterEntryFieldType = {
     description: string;
     value: number;
     accountId: string;
+    dueDate: Date
 };
 
 export const tableColumns: ColumnsType<Entry> = [
